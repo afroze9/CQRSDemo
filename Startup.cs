@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CQRSDemo.Mapping;
+using CQRSDemo.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +35,11 @@ namespace CQRSDemo
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "cqrs", Version = "v1" });
             });
+
+            services.AddSingleton<ICustomersRepository, CustomersRepository>();
+            services.AddSingleton<IOrdersRepository, OrdersRepository>();
+            services.AddSingleton<IMapper, Mapper>();
+            services.AddMediatR(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +49,7 @@ namespace CQRSDemo
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "cqrs v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CQRS Demo v1"));
             }
 
             app.UseHttpsRedirection();
